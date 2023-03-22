@@ -23,6 +23,10 @@ public class LifePart implements EntityPart {
         this.expiration = expiration;
     }
 
+    public LifePart(int life) {
+
+    }
+
     public int getLife() {
         return life;
     }
