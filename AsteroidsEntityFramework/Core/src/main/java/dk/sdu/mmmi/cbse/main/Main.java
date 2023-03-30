@@ -9,8 +9,11 @@ public class Main {
 	public static void main(String[] args) {
 		Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
 
+		int width = 1900;
+		int height = 800;
 		cfg.setTitle("Asteroids");
-		cfg.setWindowSizeLimits(1000, 800, 1900, 1080);
+		cfg.setWindowSizeLimits(width, height, width, height);
+		cfg.setWindowedMode(width, height);
 		
 		new Lwjgl3Application(new Game(), cfg);
 		
