@@ -6,6 +6,7 @@ import dk.sdu.mmmi.cbse.playersystem.EnemyPlugin;
 module Enemy {
     requires Common;
     requires CommonEnemy;
+
     provides IEntityProcessingService with EnemyControlSystem;
     provides IGamePluginService with EnemyPlugin;
 

@@ -6,8 +6,7 @@ module Core {
     requires CommonAsteroid;
 
     requires java.desktop;
-    requires gdx.backend.lwjgl;
-    requires gdx;
+    requires com.badlogic.gdx;
 
     //Asteroids SPIs
     uses dk.sdu.mmmi.cbse.common.services.IGamePluginService;

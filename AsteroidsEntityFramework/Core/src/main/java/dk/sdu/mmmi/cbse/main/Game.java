@@ -12,11 +12,14 @@ import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
 import dk.sdu.mmmi.cbse.managers.GameInputProcessor;
-import util.SPILocator;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.ServiceLoader;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class Game
         implements ApplicationListener {
@@ -25,9 +28,22 @@ public class Game
     private ShapeRenderer sr;
 
     private final GameData gameData = new GameData();
-    //private List<IEntityProcessingService> entityProcessors = new ArrayList<>();
+
+    //Used for ServiceLoader (non JPSM)
+    private List<IEntityProcessingService> entityProcessors = new ArrayList<>();
     //private List<IGamePluginService> entityPlugins = new ArrayList<>();
+    private List<IPostEntityProcessingService> postEntityProcessors = new ArrayList<>();
     private World world = new World();
+
+    /*private final List<IGamePluginService> gamePluginServices;
+    private final List<IEntityProcessingService> entityProcessingServices;
+    private final List<IPostEntityProcessingService> postEntityProcessingServices;
+
+    public Game(List<IGamePluginService> gamePluginServices, List<IEntityProcessingService> entityProcessingServices, List<IPostEntityProcessingService> postEntityProcessingServices) {
+        this.gamePluginServices = gamePluginServices;
+        this.entityProcessingServices = entityProcessingServices;
+        this.postEntityProcessingServices = postEntityProcessingServices;
+    }*/
 
     @Override
     public void create() {
@@ -45,6 +61,7 @@ public class Game
                 new GameInputProcessor(gameData)
         );
 
+        //Manual add modules
         /*IGamePluginService playerPlugin = new PlayerPlugin();
         IGamePluginService enemyPlugin = new EnemyPlugin();
         IGamePluginService asteroidPlugin = new AsteroidPlugin();
@@ -87,6 +104,7 @@ public class Game
         for (IEntityProcessingService entityProcessorService : getEntityProcessingServices()) {
             entityProcessorService.process(gameData, world);
         }
+        //Post update
         for (IPostEntityProcessingService postEntityProcessingService : getPostEntityProcessingServices()){
             postEntityProcessingService.process(gameData,world);
         }
@@ -96,8 +114,10 @@ public class Game
         for (Entity entity : world.getEntities()) {
 
             float[] entityColor = entity.getColor();
+            //Set default color
             sr.setColor(entityColor[0],entityColor[1],entityColor[2],entityColor[3]);
 
+            //Draw entity with lines
             sr.begin(ShapeRenderer.ShapeType.Line);
 
             float[] shapex = entity.getShapeX();
@@ -131,15 +151,18 @@ public class Game
     }
 
     private Collection<? extends IGamePluginService> getPluginServices() {
-        return SPILocator.locateAll(IGamePluginService.class);
+        //return SPILocator.locateAll(IGamePluginService.class); //Before JPMS
+        return ServiceLoader.load(IGamePluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
 
     private Collection<? extends IEntityProcessingService> getEntityProcessingServices() {
-        return SPILocator.locateAll(IEntityProcessingService.class);
+        //return SPILocator.locateAll(IEntityProcessingService.class); //Before JPMS
+        return ServiceLoader.load(IEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
 
     private Collection<? extends IPostEntityProcessingService> getPostEntityProcessingServices() {
-        return SPILocator.locateAll(IPostEntityProcessingService.class);
+       // return SPILocator.locateAll(IPostEntityProcessingService.class); //Before JPMS
+        return ServiceLoader.load(IPostEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
 
 
