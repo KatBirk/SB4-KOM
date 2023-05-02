@@ -52,7 +52,7 @@ public class BulletControlSystem implements IEntityProcessingService, BulletSPI 
 
         bullet.add(new PositionPart(bx + x, by + y, radians));
         bullet.add(new LifePart(1));
-        bullet.add(new MovingPart(0, 5000000, speed, 5));
+        bullet.add(new MovingPart(0, 50000, speed, 5));
         bullet.add(new TimerPart(1));
 
         bullet.setShapeX(new float[2]);

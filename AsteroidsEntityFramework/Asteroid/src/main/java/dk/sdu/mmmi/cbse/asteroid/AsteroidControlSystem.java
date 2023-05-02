@@ -3,22 +3,33 @@ package dk.sdu.mmmi.cbse.asteroid;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
+import dk.sdu.mmmi.cbse.common.data.entityparts.LifePart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.commonAsteroid.Asteroid;
+import dk.sdu.mmmi.cbse.commonAsteroid.AsteroidSplitter;
 
-//Equivalent to 'AsteroidProcessor.java'
 
 public class AsteroidControlSystem implements IEntityProcessingService {
+    AsteroidSplitter asteroidSplitter = new AsteroidSplitterImpl();
     @Override
     public void process(GameData gameData, World world) {
         for (Entity asteroid : world.getEntities(Asteroid.class)) {
             PositionPart positionPart = asteroid.getPart(PositionPart.class);
             MovingPart movingPart = asteroid.getPart(MovingPart.class);
+            LifePart lifePart = asteroid.getPart(LifePart.class);
 
             int numPoints = 12;
             float speed = (float) Math.random() * 10f + 20f;
+
+            if (lifePart.getLife() == 1){
+                numPoints = 8;
+                speed = (float) Math.random() * 30f + 70f;
+            } else if (lifePart.getLife() == 2){
+                numPoints = 10;
+                speed = (float) Math.random() * 10f + 50f;
+            }
 
             movingPart.setSpeed(speed);
             movingPart.setUp(true);
@@ -26,6 +37,9 @@ public class AsteroidControlSystem implements IEntityProcessingService {
             movingPart.process(gameData, asteroid);
             positionPart.process(gameData, asteroid);
 
+            if (lifePart.isIsHit()){
+                asteroidSplitter.createSplitAsteroid(asteroid, world);
+            }
             updateShape(asteroid,numPoints);
         }
     }
@@ -38,20 +52,6 @@ public class AsteroidControlSystem implements IEntityProcessingService {
         float y = positionPart.getY();
         float radians = positionPart.getRadians();
 
-        /*shapex[0] = (float) (x + Math.cos(radians) * 15);
-        shapey[0] = (float) (y + Math.sin(radians) * 15);
-
-        shapex[1] = (float) (x + Math.cos(radians - 4 * 3.1415f / 5) * 15);
-        shapey[1] = (float) (y + Math.sin(radians - 4 * 3.1145f / 5) * 15);
-
-        shapex[2] = (float) (x + Math.cos(radians + 3.1415f) * 15);
-        shapey[2] = (float) (y + Math.sin(radians + 3.1415f) * 15);
-
-        shapex[3] = (float) (x + Math.cos(radians + 4 * 3.1415f / 5) * 30);
-        shapey[3] = (float) (y + Math.sin(radians + 4 * 3.1415f / 5) * 14);
-
-        shapex[4] = (float) (x + Math.cos(radians-3*Math.PI) * 20);
-        shapey[4] = (float) (y + Math.sin(radians-3*Math.PI) * 35);*/
         float angle = 0;
         float radius = entity.getRadius();
         for (int i = 0; i<numPoints; i++){
