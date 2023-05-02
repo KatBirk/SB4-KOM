@@ -29,21 +29,16 @@ public class Game
 
     private final GameData gameData = new GameData();
 
-    //Used for ServiceLoader (non JPSM)
-    private List<IEntityProcessingService> entityProcessors = new ArrayList<>();
-    //private List<IGamePluginService> entityPlugins = new ArrayList<>();
-    private List<IPostEntityProcessingService> postEntityProcessors = new ArrayList<>();
+    private List<IEntityProcessingService> entityProcessingServices = new ArrayList<>();
+    private List<IGamePluginService> gamePluginServices = new ArrayList<>();
+    private List<IPostEntityProcessingService> postEntityProcessingServices = new ArrayList<>();
     private World world = new World();
-
-    /*private final List<IGamePluginService> gamePluginServices;
-    private final List<IEntityProcessingService> entityProcessingServices;
-    private final List<IPostEntityProcessingService> postEntityProcessingServices;
 
     public Game(List<IGamePluginService> gamePluginServices, List<IEntityProcessingService> entityProcessingServices, List<IPostEntityProcessingService> postEntityProcessingServices) {
         this.gamePluginServices = gamePluginServices;
         this.entityProcessingServices = entityProcessingServices;
         this.postEntityProcessingServices = postEntityProcessingServices;
-    }*/
+    }
 
     @Override
     public void create() {
@@ -61,24 +56,8 @@ public class Game
                 new GameInputProcessor(gameData)
         );
 
-        //Manual add modules
-        /*IGamePluginService playerPlugin = new PlayerPlugin();
-        IGamePluginService enemyPlugin = new EnemyPlugin();
-        IGamePluginService asteroidPlugin = new AsteroidPlugin();
-
-        IEntityProcessingService playerProcess = new PlayerControlSystem();
-        IEntityProcessingService enemyProcess = new EnemyControlSystem();
-        IEntityProcessingService asteroidProcess = new AsteroidControlSystem();
-
-        entityPlugins.add(playerPlugin);
-        entityPlugins.add(enemyPlugin);
-        entityPlugins.add(asteroidPlugin);
-        entityProcessors.add(playerProcess);
-        entityProcessors.add(enemyProcess);
-        entityProcessors.add(asteroidProcess);*/
-
         // Lookup all Game Plugins using ServiceLoader
-        for (IGamePluginService iGamePlugin : getPluginServices()) {
+        for (IGamePluginService iGamePlugin : gamePluginServices) {
             iGamePlugin.start(gameData, world);
         }
     }
@@ -101,11 +80,11 @@ public class Game
 
     private void update() {
         // Update
-        for (IEntityProcessingService entityProcessorService : getEntityProcessingServices()) {
+        for (IEntityProcessingService entityProcessorService : entityProcessingServices) {
             entityProcessorService.process(gameData, world);
         }
         //Post update
-        for (IPostEntityProcessingService postEntityProcessingService : getPostEntityProcessingServices()){
+        for (IPostEntityProcessingService postEntityProcessingService : postEntityProcessingServices){
             postEntityProcessingService.process(gameData,world);
         }
     }
@@ -149,21 +128,5 @@ public class Game
     @Override
     public void dispose() {
     }
-
-    private Collection<? extends IGamePluginService> getPluginServices() {
-        //return SPILocator.locateAll(IGamePluginService.class); //Before JPMS
-        return ServiceLoader.load(IGamePluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
-    }
-
-    private Collection<? extends IEntityProcessingService> getEntityProcessingServices() {
-        //return SPILocator.locateAll(IEntityProcessingService.class); //Before JPMS
-        return ServiceLoader.load(IEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
-    }
-
-    private Collection<? extends IPostEntityProcessingService> getPostEntityProcessingServices() {
-       // return SPILocator.locateAll(IPostEntityProcessingService.class); //Before JPMS
-        return ServiceLoader.load(IPostEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
-    }
-
 
 }
