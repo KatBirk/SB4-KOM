@@ -32,6 +32,8 @@
 package dictionary;
 
 import dictionary.spi.Dictionary;
+
+import java.util.Dictionary;
 import java.util.Iterator;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
