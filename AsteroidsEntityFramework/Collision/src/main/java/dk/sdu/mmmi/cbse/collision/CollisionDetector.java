@@ -14,14 +14,13 @@ public class CollisionDetector implements IPostEntityProcessingService {
             for (Entity collisionDetection : world.getEntities()) {
                 LifePart entityLife = entity.getPart(LifePart.class);
 
-                // if the two entities are identical, skip the iteration
+                // if the two entities are the same skip the iteration
                 if (entity.getID().equals(collisionDetection.getID())) {
                     continue;
 
                 }
 
                 if (this.collides(entity, collisionDetection)) {
-                    world.removeEntity(entity);
                     if (entityLife.getLife() > 0) {
                         entityLife.setLife(entityLife.getLife() - 1);
                         entityLife.setIsHit(true);

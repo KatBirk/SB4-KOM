@@ -10,16 +10,12 @@ import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 import dk.sdu.mmmi.cbse.commonAsteroid.Asteroid;
 
 public class AsteroidPlugin implements IGamePluginService {
-    private Entity asteroid;
 
-    public AsteroidPlugin() {
-    }
 
     @Override
     public void start(GameData gameData, World world) {
 
-        // Add entities to the world
-        asteroid = createAsteroid(gameData);
+        Entity asteroid = createAsteroid(gameData);
         world.addEntity(asteroid);
     }
 
@@ -31,7 +27,7 @@ public class AsteroidPlugin implements IGamePluginService {
         asteroid.setRadius(20);
         asteroid.add(new MovingPart(0, speed, speed, 0));
         asteroid.add(new PositionPart(30, 30, radians));
-        asteroid.add(new LifePart(1));
+        asteroid.add(new LifePart(3));
         //asteroid.setColor((float) 0, 0.5F,0.2F,0.1F);
 
         return asteroid;
@@ -39,7 +35,6 @@ public class AsteroidPlugin implements IGamePluginService {
 
     @Override
     public void stop(GameData gameData, World world) {
-        // Remove entities
         for (Entity asteroid : world.getEntities(Asteroid.class)){
             world.removeEntity(asteroid);
         }
