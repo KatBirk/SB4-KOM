@@ -16,11 +16,14 @@ public class CollisionDetector implements IPostEntityProcessingService {
             for (Entity collisionDetection : world.getEntities()) {
                 LifePart entityLife = entity.getPart(LifePart.class);
 
+                //Entity cannot collide with itself
                 if (entity.getID().equals(collisionDetection.getID())) {
                     continue;
                 }
 
-                if (entity instanceof Player && collisionDetection instanceof Bullet) {
+                //Player cannot shoot itself
+                if (entity instanceof Player && collisionDetection instanceof Bullet ||
+                        entity instanceof Bullet && collisionDetection instanceof Player) {
                     continue;
                 }
 
