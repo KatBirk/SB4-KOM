@@ -4,6 +4,7 @@ module Core {
     requires CommonEnemy;
     requires CommonBullet;
     requires CommonAsteroid;
+    requires CommonPlayer;
 
     //Spring & LibGDX
     requires java.desktop;

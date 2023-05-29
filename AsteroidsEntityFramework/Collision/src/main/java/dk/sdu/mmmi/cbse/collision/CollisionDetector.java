@@ -6,6 +6,8 @@ import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.data.entityparts.LifePart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
+import dk.sdu.mmmi.cbse.commonBullet.Bullet;
+import dk.sdu.mmmi.cbse.commonplayer.Player;
 
 public class CollisionDetector implements IPostEntityProcessingService {
     @Override
@@ -14,19 +16,19 @@ public class CollisionDetector implements IPostEntityProcessingService {
             for (Entity collisionDetection : world.getEntities()) {
                 LifePart entityLife = entity.getPart(LifePart.class);
 
-                // if the two entities are the same skip the iteration
                 if (entity.getID().equals(collisionDetection.getID())) {
                     continue;
+                }
 
+                if (entity instanceof Player && collisionDetection instanceof Bullet) {
+                    continue;
                 }
 
                 if (this.collides(entity, collisionDetection)) {
-                    if (entityLife.getLife() > 0) {
-                        entityLife.setLife(entityLife.getLife() - 1);
-                        entityLife.setIsHit(true);
-                        if (entityLife.getLife() <= 0) {
-                            world.removeEntity(entity);
-                        }
+                    entityLife.setIsHit(true);
+                    entityLife.process(gameData, entity);
+                    if (entityLife.isDead()) {
+                        world.removeEntity(entity);
                     }
                 }
             }
@@ -37,9 +39,9 @@ public class CollisionDetector implements IPostEntityProcessingService {
     public Boolean collides(Entity entity, Entity entity2) {
         PositionPart entMov = entity.getPart(PositionPart.class);
         PositionPart entMov2 = entity2.getPart(PositionPart.class);
-        float dx = (float) entMov.getX() - (float) entMov2.getX();
-        float dy = (float) entMov.getY() - (float) entMov2.getY();
-        float distance = (float) Math.sqrt(dx * dx + dy * dy);
+        float dx = entMov.getX() - entMov2.getX();
+        float dy = entMov.getY() - entMov2.getY();
+        float distance = (float) Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
         if (distance < (entity.getRadius() + entity2.getRadius())) {
             return true;
         }
