@@ -16,12 +16,17 @@
         <module>CommonEnemy</module>
         <module>CommonBullet</module>
         <module>CommonAsteroid</module>
+        <module>CommonPlayer</module>
     </modules>
     <properties>
         <java>java</java>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <surefire.version>3.0.0</surefire.version>
+        <mockito.core.version>5.3.1</mockito.core.version>
+        <junit.jupiter.version>5.9.2</junit.jupiter.version>
+        <junit.platform.version>1.9.2</junit.platform.version>
     </properties>
 
     <dependencyManagement>
@@ -94,6 +99,16 @@
             </activation>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.0.0-M4</version>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <mockito.mock-maker>mock-maker-inline</mockito.mock-maker>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
                     <plugin>
                         <artifactId>maven-clean-plugin</artifactId>
                         <version>3.2.0</version>

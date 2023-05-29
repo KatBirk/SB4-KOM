@@ -9,5 +9,4 @@ module Enemy {
 
     provides IEntityProcessingService with EnemyControlSystem;
     provides IGamePluginService with EnemyPlugin;
-
 }

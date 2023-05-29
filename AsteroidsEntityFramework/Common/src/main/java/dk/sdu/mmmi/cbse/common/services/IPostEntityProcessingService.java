@@ -9,8 +9,8 @@ import dk.sdu.mmmi.cbse.common.data.World;
  */
 public interface IPostEntityProcessingService  {
         /**
-         * The process method is called everytime an action or any logic happens after the loading
-         * of the Entity, like collision.
+         * Pre-condition: IEntityProcessingServices have been processed
+         * Post-condition: Conditions of entities have been acted upon and processed
          * @param gameData holds the data about the game state from the previous game tick
          * @param world holds data about the Entity state from the previous game tick
          */
