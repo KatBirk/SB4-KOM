@@ -8,19 +8,19 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class Main {
 	
 	public static void main(String[] args) {
-		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(ModuleConfig.class);
-		Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ModuleConfig.class);
+		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 
-		for (String beanName : ctx.getBeanDefinitionNames()) {
+		for (String beanName : context.getBeanDefinitionNames()) {
 			System.out.println(beanName);
 		}
 		int width = 1900;
 		int height = 800;
-		cfg.setTitle("Asteroids");
-		cfg.setWindowSizeLimits(width, height, width, height);
-		cfg.setWindowedMode(width, height);
+		config.setTitle("Asteroids");
+		config.setWindowSizeLimits(width, height, width, height);
+		config.setWindowedMode(width, height);
 		
-		new Lwjgl3Application(ctx.getBean(Game.class), cfg);
+		new Lwjgl3Application(context.getBean(Game.class), config);
 		
 	}
 	

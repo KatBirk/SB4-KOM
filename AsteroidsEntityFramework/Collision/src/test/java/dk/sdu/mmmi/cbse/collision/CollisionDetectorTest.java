@@ -27,7 +27,7 @@ class CollisionDetectorTest {
         this.collisionDetector = new CollisionDetector();
         this.mockedGameData = mock(GameData.class);
     }
-    @Test
+
     void bulletAndAsteroidAreHit() {
         Entity mockedAsteroid = mockedEntity(Asteroid.class, "1", 0, 0, 2,2f);
         Entity mockedBullet1 = mockedEntity(Bullet.class,"2", 0, 0, 2,2f);
@@ -53,6 +53,11 @@ class CollisionDetectorTest {
     }
 
     @Test
+    void process(){
+        bulletAndPlayerNotHit();
+        bulletAndAsteroidAreHit();
+    }
+
     void bulletAndPlayerNotHit(){
         Entity mockedBullet1 = mockedEntity(Bullet.class,"3", 5, 5, 2,2f);
         Entity mockedPlayer = mockedEntity(Player.class,"4", 5, 5, 2,2f);

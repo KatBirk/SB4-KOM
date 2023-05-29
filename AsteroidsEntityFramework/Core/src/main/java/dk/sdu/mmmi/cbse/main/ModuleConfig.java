@@ -5,6 +5,7 @@ import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import util.SPILocator;
 
 import java.util.List;
 import java.util.ServiceLoader;
@@ -24,16 +25,16 @@ public class ModuleConfig {
 
     @Bean
     public List<IEntityProcessingService> entityProcessingServices (){
-        return ServiceLoader.load(IEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
+        return SPILocator.locateAll(IEntityProcessingService.class);
     }
 
     @Bean
     public List<IGamePluginService> gamePluginServices() {
-        return ServiceLoader.load(IGamePluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
+        return SPILocator.locateAll(IGamePluginService.class);
     }
 
     @Bean
     public List<IPostEntityProcessingService> postEntityProcessingServices() {
-        return ServiceLoader.load(IPostEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
+        return SPILocator.locateAll(IPostEntityProcessingService.class);
     }
 }

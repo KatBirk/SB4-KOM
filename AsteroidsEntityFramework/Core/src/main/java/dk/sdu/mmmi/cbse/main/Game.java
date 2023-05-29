@@ -127,6 +127,9 @@ public class Game
 
     @Override
     public void dispose() {
+        for (IGamePluginService iGamePlugin : gamePluginServices) {
+            iGamePlugin.stop(gameData, world);
+        }
     }
 
 }
