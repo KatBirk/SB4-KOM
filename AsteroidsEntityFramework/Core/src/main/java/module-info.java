@@ -7,7 +7,6 @@ module Core {
     requires CommonPlayer;
 
     //Spring & LibGDX
-    requires java.desktop;
     requires com.badlogic.gdx;
     requires spring.context;
     requires spring.beans;
